@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>和润城抽奖系统</title>
+    <link href="../assets/css/reset.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="js.js" type="text/javascript"></script>
+    <script src="../assets/js/jquery-2.1.4.js" type="text/javascript"></script>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #291534;
+        }
+
+        #mainBox {
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        #maxNum {
+            clear: both;
+            width: 300px;
+            height: 50px;
+            background-color: #FFF;
+            display: none;
+            left: 40%;
+            bottom: 120px;
+            position: absolute;
+            z-index: 99;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="mainBox">
+    <div style="height: 50px"></div>
+    <img src="images/cj/top.png" class="top" alt="">
+    <div class="rollCj" id="cj3" style="display: block">
+        <ul class="randomList">
+
+
+        </ul>
+    </div>
+
+    <img src="images/about1.png" style="position: absolute;display: block;width: 100%;left: 0;bottom: 0;" alt="">
+    <input type="text" placeholder="请输入现场人数,按'O'确认!" name="maxNum" id="maxNum"/>
+<div class="sysTips"></div>
+</div>
+
+
+<script>
+    var maxNum = 400;//保存现场总人数
+    var num = null;//需要抽出的人数
+    var zj = [];//保存已中奖人员
+    console.log(localStorage.getItem("zj"));
+    if (localStorage.getItem("zj") !== null) {
+        var zj = JSON.parse(localStorage.getItem("zj"));
+        console.log('initLocal=>' + zj)
+    }
+    var timer;//保存抽奖定时器
+    var end_timer;//判断抽奖结束定时器
+    var html;
+    var indexId;
+    var theParts;
+    var randNums = [];//随机中奖号码
+    var isStart = false;
+    var isEnd = 0;
+    var setNum = false;
+    var tempMin = [];//区间起始数
+    var tempMax = [];//区间结束数
+    window.onload = function () {
+
+        listonKey();
+
+    };
+
+    function setIndex(n) {
+
+        if ((maxNum / n) < n) {
+            alert('人数太少无法设置成' + n + '组');
+            return false
+        }
+
+        num = n;
+        theParts = parseInt(maxNum / num);
+        console.log('theParts:' + theParts);
+        html = '';
+        randNums = [];
+
+        for (var i = 0; i <= n - 1; i++) {
+            indexId = 'index-' + (i + 1);
+            html += "<li class='hrjt'>HRJT</li><li class='nums' id='" + indexId + "'>???</li>";
+            tempMin[i] = (theParts + 1) * (i - 1) + theParts;
+            tempMax[i] = (theParts + 1) * i + theParts;
+        }
+        var indexHtml = $('.randomList');
+
+        if ((n % 2) != 0) {
+            html += "<li class='hrjt'>恭喜</li><li class='nums' id='" + indexId + "'>发财</li>";
+
+        }
+        tempMin[0] = 1;
+        tempMax[num - 1] = maxNum;
+        console.log(tempMin);
+        console.log(tempMax);
+
+        indexHtml.html(html);
+
+    }
+
+    function listonKey() {
+        $(document).keyup(function (e) {
+            var curKey = e.which;
+            console.log(curKey);
+
+
+
+
+            if (curKey == 77) {//输入现场人数
+                setNum = true;
+                $("#maxNum").show();
+                $("#maxNum").focus();
+
+            }
+            if (curKey == 79) {
+                maxNum = parseInt($("#maxNum").val());
+                console.log('max:' + maxNum);
+                $("#maxNum").hide();
+                setNum = false;
+
+            }
+            if (!setNum) {
+
+                if (curKey >= 49 && curKey <= 57) {
+
+                    setIndex(curKey - 48);
+
+                }
+                if (curKey == 48) {
+                    setIndex(10);
+                }
+
+                if (curKey == 83) {//S键开始
+                    if (num == null) {
+                        alert('请先设置抽取人数');
+                        return false;
+                    }
+                    if (isStart !== false) {
+                        console.log('S.isStart=>' + isStart);
+                        return false;
+                    }
+
+                    clearInterval(timer);
+                    timer = setInterval(function () {
+                        startAction();
+                    }, 75)
+                }
+
+                if (curKey == 69) {//E结束
+                    if (isEnd !== 0) {
+                        console.log('E.isEnd=>' + isEnd);
+                        return false;
+                    }
+                    if (isStart === false || isStart === 0) {
+                        console.log('E.isStart=>' + isStart);
+                        return false;
+                    }
+                    clearInterval(end_timer);
+                    end_timer = setInterval(function () {
+                        endAction();
+                    }, 1)
+                }
+            }
+        });
+    }
+
+
+    function startAction() {
+        console.log(num);
+        for (i = 0; i <= num - 1; i++) {
+            randNums[i] = padZero(random(tempMin[i], tempMax[i]));
+            console.log(randNums);
+            console.log(i + 1);
+            console.log($("#index-" + (i + 1)).html());
+            $("#index-" + (i + 1)).html(randNums[i]);
+        }
+        isStart = true;
+
+        isEnd = 0;
+
+    }
+    //抽奖结束
+    function endAction() {
+
+        if (isStart === 0 || isEnd !== 0) {
+            console.log('end.isStart=>' + isStart);
+            console.log('end.isEnd=>' + isEnd);
+            clearInterval(end_timer);
+            return false;
+        }
+        clearInterval(timer);
+        isStart = false;
+
+        zjStr = zj.join('.');
+
+        for (i = 0; i < num - 1; i++) {
+            theRepeat = zjStr.indexOf(randNums[i]);
+            console.log('theRepeat:' + theRepeat);
+            if (theRepeat >= 0) {
+                console.log('E.i=>' + i);
+                console.log('E.zj:' + zjStr);
+                console.log('E.rn:' + randNums);
+                repeatAgain(i);
+                return false;
+//                console.log('end:' + isEnd);
+            }
+
+
+        }
+        isEnd = true;
+        clearInterval(end_timer);
+
+        isEnd = 0;
+        zj.push.apply(zj, randNums);
+        console.log(num);
+        localStorage.setItem("zj", JSON.stringify(zj));
+        console.log('endzj:' + zj);
+
+
+    }
+    function repeatAgain(i) {
+        if (theRepeat >= 0) {
+            randNums[i] = padZero(random(tempMin[i], tempMax[i]));
+            $("#index-" + (i + 1)).html(randNums[i]);
+            console.log('A.randNums:' + randNums[i]);
+            console.log('A.end:' + isEnd);
+        }
+    }
+    //不足3位补零
+    function padZero(str) {
+        var len = str.toString().length;
+        while (len < 3) {
+            str = "0" + str;
+            len++;
+        }
+        return str;
+    }
+    //随机数生成
+    //生成>=min,<max的随机数
+    function random(min, max) {
+
+        return Math.floor(min + Math.random() * (max - min));
+
+    }
+</script>
+
+</body>
+</html>

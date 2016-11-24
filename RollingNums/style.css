@@ -1,0 +1,130 @@
+.top {
+    margin-top: 50px;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.rollCj {
+    width: 80%;
+    margin-top: 50px;
+    margin-left: 10%;
+    clear: both;
+}
+
+.rollCj > .randomList {
+    float: left;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.rollCj > .randomList > li {
+    float: left;
+    background-color: #d2e0e2;
+    padding: 2px;
+    color: #ba26a5;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 60px;
+    font-weight: bolder;
+    margin-top: 30px;
+}
+
+.nums {
+    margin-left: 5px;
+    font-size-adjust: 2;
+    letter-spacing:6px;
+}
+
+.hrjt {
+    margin-left: 50px;
+}
+
+.top1 {
+    width: 60%;
+    float: left;
+    margin-left: 10%;
+}
+
+.box {
+    position: relative;
+    margin: 0 auto;
+    width: 1000px;
+    float: left;
+}
+
+.logo {
+    display: block;
+    margin: 10px auto;
+    width: 200px;
+    height: 130px;
+}
+
+.list {
+    background-color: #0F462C;
+    height: 20px;
+    margin-top: 25px;
+    width: 100%;
+    position: relative;
+}
+
+.list span {
+    position: absolute;
+    display: block;
+}
+
+.list img {
+    position: absolute;
+    display: block;
+}
+
+.index {
+    color: #0F462C;
+    line-height: 50px;
+    font-size: 18px;
+    font-weight: bolder;
+    right: -60px;
+    top: -15px;
+    width: 60px;
+    z-index: 999;
+}
+
+.oldmen {
+    left: 49px;
+    top: -15px;
+    height: 35px;
+    transition: 0.5s;
+    z-index: 100;
+}
+
+.headimg {
+    top: -15px;
+    left: -45px;
+    height: 40px;
+    width: 40px;
+    z-index: 88;
+    border-radius: 100%;
+}
+
+.nickname {
+    top: 0px;
+    left: 0;
+    line-height: 20px;
+    font-size: 16px;
+    width: 300px;
+    height: 20px;
+    z-index: 99;
+    color: #FFF;
+    font-weight: bolder;
+    overflow: hidden;
+}
+
+.jdt {
+    height: 20px;
+    top: 0;
+    left: 0;
+    width: 50px;
+    background-color: #A0D9F6;
+    transition: 0.5s;
+    z-index: 88;
+}
