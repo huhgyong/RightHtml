@@ -2,7 +2,7 @@
 
 >逐渐整理这些年用过的一些实用的HTML前端代码
 
-##RoliingNums
+##[RoliingNums](http://venshi.oschina.io/righthtml/RollingNums/)
 一个幸运抽奖的纯HTML代码模板
 号码从001到MAX定义的一个三位数结束随机抽取制定个数的号码作为中奖号码,采用html5的Local Storage存储中奖名单,在不清除本地存储的情况下不会重复中奖
 
